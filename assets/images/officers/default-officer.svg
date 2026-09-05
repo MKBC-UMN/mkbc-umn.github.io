@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
+  <title id="title">Default officer profile image</title>
+  <desc id="desc">A neutral gray user silhouette placeholder.</desc>
+  <rect width="160" height="160" rx="80" fill="#e5e7eb"/>
+  <circle cx="80" cy="61" r="30" fill="#9ca3af"/>
+  <path d="M32 133c6-32 25-49 48-49s42 17 48 49" fill="#9ca3af"/>
+  <circle cx="80" cy="80" r="76" fill="none" stroke="#d1d5db" stroke-width="8"/>
+</svg>

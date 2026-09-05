@@ -1,0 +1,350 @@
+---
+---
+
+@charset "utf-8";
+
+@import "minimal-mistakes/skins/air";
+@import "minimal-mistakes";
+
+:root {
+  --mkbc-ink: #212121;
+  --mkbc-muted: #5f6b66;
+  --mkbc-line: #dce5df;
+  --mkbc-green: #2d6a4f;
+  --mkbc-green-dark: #1b4332;
+  --mkbc-warm: #fff8ed;
+  --mkbc-bg: #fffaf1;
+  --mkbc-red: #c60c30;
+  --mkbc-blue: #003478;
+}
+
+body.club-home {
+  background: var(--mkbc-bg);
+}
+
+.masthead,
+.greedy-nav,
+.greedy-nav .visible-links,
+.greedy-nav .hidden-links {
+  background: var(--mkbc-bg);
+}
+
+.club-home .initial-content,
+.club-home .page {
+  background: transparent;
+}
+
+.club-home .page__title {
+  display: none;
+}
+
+.club-home .page__content h2 {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.club-hero {
+  display: grid;
+  grid-template-columns: minmax(25rem, 1.15fr) minmax(17rem, .85fr);
+  gap: 2.5rem;
+  align-items: center;
+  margin: 0 0 1.75rem;
+  padding: 1.25rem 0 1.75rem;
+}
+
+.club-hero-copy {
+  min-width: 0;
+}
+
+.club-eyebrow {
+  margin: 0 0 .75rem;
+  color: var(--mkbc-green);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.club-hero h1 {
+  max-width: 14ch;
+  margin: 0;
+  color: var(--mkbc-ink);
+  font-size: clamp(2.2rem, 6vw, 4.35rem);
+  line-height: 1;
+}
+
+.club-hero h1 > span {
+  display: block;
+}
+
+.club-k {
+  display: inline;
+  color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Crect width='100' height='100' fill='%23c60c30'/%3E%3Cpath d='M0 52 C24 14 76 86 100 48 L100 100 L0 100 Z' fill='%23003478'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.club-dek {
+  max-width: 42rem;
+  margin: 1.15rem 0 0;
+  color: var(--mkbc-muted);
+  font-size: 1.08rem;
+  line-height: 1.65;
+}
+
+.club-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-top: 1.45rem;
+}
+
+.club-actions .btn {
+  margin: 0;
+}
+
+.club-hero-media {
+  position: relative;
+  max-width: 25rem;
+  justify-self: end;
+}
+
+.club-photo-frame {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 5 / 6;
+  border-radius: 1rem;
+  background: var(--mkbc-warm);
+  box-shadow: 0 1.5rem 3rem -.95rem rgba(25, 50, 40, .24);
+}
+
+.club-photo-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: opacity .35s ease;
+}
+
+.club-photo-frame img.is-fading {
+  opacity: 0;
+}
+
+.club-caption {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  max-width: 13rem;
+  margin: 0;
+  padding: .7rem .85rem;
+  border-radius: .55rem;
+  background: rgba(255, 255, 255, .92);
+  box-shadow: 0 .65rem 1.4rem -.9rem rgba(0, 0, 0, .45);
+  color: var(--mkbc-muted);
+  font-size: .78rem;
+  font-style: italic;
+  line-height: 1.35;
+  transform: rotate(-1.25deg);
+}
+
+.club-gallery-meta {
+  display: flex;
+  gap: .8rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: .75rem;
+}
+
+.club-hero-dots {
+  display: flex;
+  flex-shrink: 0;
+  gap: .4rem;
+}
+
+.club-hero-dot {
+  width: .58rem;
+  height: .58rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #c7d1ca;
+  cursor: pointer;
+}
+
+.club-hero-dot.is-active {
+  background: var(--mkbc-blue);
+}
+
+.club-section {
+  padding: 1.45rem 0;
+}
+
+.club-section h2 {
+  margin-top: 0;
+}
+
+.club-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1rem;
+}
+
+.club-card {
+  padding: 1rem;
+  border: 1px solid var(--mkbc-line);
+  border-radius: .5rem;
+  background: #fff;
+}
+
+.club-card h3 {
+  margin-top: 0;
+  margin-bottom: .25rem;
+  font-size: 1.05rem;
+}
+
+.club-card p {
+  margin-bottom: 0;
+}
+
+.club-card-meta {
+  color: var(--mkbc-green);
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.officer-card,
+.legacy-card {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: .85rem 1rem;
+  align-items: center;
+}
+
+.officer-card > p,
+.legacy-card > p {
+  grid-column: 1 / -1;
+}
+
+.officer-photo {
+  display: flex;
+  width: 4rem;
+  height: 4rem;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--mkbc-red), var(--mkbc-blue));
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.officer-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.officer-card h3,
+.legacy-card h3 {
+  margin-bottom: .1rem;
+}
+
+.officer-field-icon {
+  font-size: .95rem;
+  vertical-align: .05em;
+}
+
+.legacy-card {
+  border-left: .25rem solid var(--mkbc-blue);
+}
+
+.policy-list {
+  margin: .6rem 0 0;
+  padding-left: 1.15rem;
+  color: var(--mkbc-muted);
+}
+
+.policy-list li {
+  margin-bottom: .45rem;
+}
+
+.policy-list li:last-child {
+  margin-bottom: 0;
+}
+
+.join-layout {
+  display: grid;
+  grid-template-columns: minmax(14rem, 20rem) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.recruitment-poster {
+  margin: 0;
+}
+
+.recruitment-poster img {
+  display: block;
+  width: 100%;
+  border-radius: .65rem;
+  box-shadow: 0 1rem 2rem -1.2rem rgba(0, 0, 0, .45);
+}
+
+.join-cta {
+  padding: 1.25rem;
+  border: 1px solid var(--mkbc-line);
+  border-radius: .65rem;
+  background: #fff;
+}
+
+.join-cta h3 {
+  margin-top: 0;
+  margin-bottom: .5rem;
+}
+
+.join-cta p {
+  margin-bottom: 1rem;
+  color: var(--mkbc-muted);
+}
+
+@media (max-width: 900px) {
+  .club-hero,
+  .join-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .club-eyebrow {
+    white-space: normal;
+  }
+
+  .club-hero-media {
+    width: min(100%, 25rem);
+    justify-self: start;
+  }
+}
+
+@media (max-width: 520px) {
+  .officer-card,
+  .legacy-card {
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+  }
+
+  .officer-photo {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .club-gallery-meta {
+    justify-content: center;
+  }
+}

@@ -1,0 +1,60 @@
+title: "MKBC UMN"
+name: "Minnesota Korean Badminton Club"
+email: ""
+description: >-
+  Minnesota Korean Badminton Club at the University of Minnesota.
+url: "https://mkbc-umn.github.io"
+baseurl: ""
+repository: "MKBC-UMN/MKBC-UMN.github.io"
+
+remote_theme: "mmistakes/minimal-mistakes"
+minimal_mistakes_skin: "air"
+locale: "en-US"
+search: false
+
+markdown: kramdown
+permalink: /:categories/:title/
+include:
+  - _pages
+
+plugins:
+  - jekyll-remote-theme
+  - jekyll-include-cache
+  - jekyll-sitemap
+  - jekyll-feed
+
+author:
+  name: "MKBC UMN"
+  avatar: "/assets/images/mkbc-group-logo.png"
+  bio: ""
+  location: "Minneapolis, MN"
+  links:
+    - label: "mkbc@umn.edu"
+      icon: "fas fa-fw fa-envelope"
+      url: "mailto:mkbc@umn.edu"
+    - label: "Instagram"
+      icon: "fab fa-fw fa-instagram"
+      url: "https://www.instagram.com/mkbc_25/"
+    # - label: "Discord"
+    #   icon: "fab fa-fw fa-discord"
+    #   url: "#"
+    # - label: "GitHub"
+    #   icon: "fab fa-fw fa-github"
+    #   url: "https://github.com/MKBC-UMN"
+    - label: "Gopherlink"
+      icon: "fas fa-fw fa-link"
+      url: "https://gopherlink.umn.edu/4938/home/"
+
+footer:
+  links:
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/MKBC-UMN"
+
+defaults:
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: single
+      author_profile: true

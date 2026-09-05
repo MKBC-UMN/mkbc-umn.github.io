@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">MKBC UMN logo placeholder</title>
+  <desc id="desc">A green circular badminton shuttle logo placeholder.</desc>
+  <rect width="256" height="256" rx="128" fill="#1b4332"/>
+  <circle cx="128" cy="128" r="104" fill="#2d6a4f"/>
+  <path d="M86 69h84l-16 95H102L86 69Z" fill="#fff8ed"/>
+  <path d="M94 84h68M99 111h58M104 138h48" stroke="#1b4332" stroke-width="7" stroke-linecap="round"/>
+  <path d="M99 170h58l-15 26h-28l-15-26Z" fill="#f2c14e"/>
+  <text x="128" y="54" fill="#fff8ed" font-family="Arial, sans-serif" font-size="24" font-weight="700" text-anchor="middle">MKBC</text>
+</svg>
