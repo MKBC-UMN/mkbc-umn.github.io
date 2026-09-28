@@ -44,7 +44,15 @@ classes: wide club-home
       <p class="club-eyebrow">This week's court times</p>
       <h2 id="schedule-title">Cooke Hall 325 — Open Play Badminton</h2>
     </div>
-    <p class="schedule-updated" id="scheduleUpdated">Loading the latest schedule…</p>
+    <div class="schedule-meta">
+      <p class="schedule-updated" id="scheduleUpdated">Loading the latest schedule…</p>
+      <button class="schedule-copy-button" id="scheduleCopyButton" type="button" disabled>
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14">
+          <path d="M8 7V4c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v10c0 1.1-.9 2-2 2h-3v3c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V9c0-1.1.9-2 2-2h3Zm2 0h3c1.1 0 2 .9 2 2v5h3V4h-8v3Zm3 2H5v10h8V9Z"></path>
+        </svg>
+        <span>Copy</span>
+      </button>
+    </div>
   </div>
   <div class="schedule-grid" id="badmintonSchedule" aria-live="polite">
     <p class="schedule-status">Loading the latest schedule…</p>
@@ -56,7 +64,9 @@ classes: wide club-home
 (function () {
   var container = document.getElementById("badmintonSchedule");
   var updated = document.getElementById("scheduleUpdated");
+  var copyButton = document.getElementById("scheduleCopyButton");
   var endpoint = {{ '/assets/data/badminton_schedule.json' | relative_url | jsonify }};
+  var shareMessage = "";
 
   function parseLocalDate(value) {
     var parts = value.split("-").map(Number);
@@ -77,6 +87,24 @@ classes: wide club-home
     var suffix = hour >= 12 ? "pm" : "am";
     var displayHour = hour % 12 || 12;
     return displayHour + ":" + String(parts[1]).padStart(2, "0") + " " + suffix;
+  }
+
+  function buildShareMessage(data) {
+    var lines = [
+      "🏸 Cooke Hall 325 Open Play Badminton",
+      formatDate(data.week_start) + " – " + formatDate(data.week_end),
+      ""
+    ];
+
+    data.schedule.forEach(function (day) {
+      var times = day.intervals.map(function (interval) {
+        return formatTime(interval.start) + "–" + formatTime(interval.end);
+      });
+      lines.push(formatDate(day.date) + ": " + (times.length ? times.join(" / ") : "No open play scheduled"));
+    });
+
+    lines.push("", new URL("#schedule", window.location.href).href);
+    return lines.join("\n");
   }
 
   function render(data) {
@@ -120,7 +148,23 @@ classes: wide club-home
       timeZone: data.timezone,
       timeZoneName: "short"
     }).format(timestamp);
+    shareMessage = buildShareMessage(data);
+    copyButton.disabled = false;
   }
+
+  copyButton.addEventListener("click", function () {
+    navigator.clipboard.writeText(shareMessage).then(function () {
+      copyButton.querySelector("span").textContent = "Copied!";
+      window.setTimeout(function () {
+        copyButton.querySelector("span").textContent = "Copy";
+      }, 1800);
+    }).catch(function () {
+      copyButton.querySelector("span").textContent = "Try again";
+      window.setTimeout(function () {
+        copyButton.querySelector("span").textContent = "Copy";
+      }, 1800);
+    });
+  });
 
   fetch(endpoint, { cache: "no-store" })
     .then(function (response) {
