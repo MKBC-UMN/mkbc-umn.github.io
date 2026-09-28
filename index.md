@@ -38,6 +38,103 @@ classes: wide club-home
   </div>
 </section>
 
+<section id="schedule" class="club-section schedule-section" aria-labelledby="schedule-title">
+  <div class="schedule-heading">
+    <div>
+      <p class="club-eyebrow">This week's court times</p>
+      <h2 id="schedule-title">Cooke Hall 325 — Open Play Badminton</h2>
+    </div>
+    <p class="schedule-updated" id="scheduleUpdated">Loading the latest schedule…</p>
+  </div>
+  <div class="schedule-grid" id="badmintonSchedule" aria-live="polite">
+    <p class="schedule-status">Loading the latest schedule…</p>
+  </div>
+  <noscript><p class="schedule-status">JavaScript is required to display the live schedule.</p></noscript>
+</section>
+
+<script>
+(function () {
+  var container = document.getElementById("badmintonSchedule");
+  var updated = document.getElementById("scheduleUpdated");
+  var endpoint = {{ '/assets/data/badminton_schedule.json' | relative_url | jsonify }};
+
+  function parseLocalDate(value) {
+    var parts = value.split("-").map(Number);
+    return new Date(parts[0], parts[1] - 1, parts[2]);
+  }
+
+  function formatDate(value) {
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      weekday: "short"
+    }).format(parseLocalDate(value));
+  }
+
+  function formatTime(value) {
+    var parts = value.split(":").map(Number);
+    var hour = parts[0];
+    var suffix = hour >= 12 ? "pm" : "am";
+    var displayHour = hour % 12 || 12;
+    return displayHour + ":" + String(parts[1]).padStart(2, "0") + " " + suffix;
+  }
+
+  function render(data) {
+    if (!data || !Array.isArray(data.schedule) || data.schedule.length !== 7) {
+      throw new Error("Unexpected schedule data");
+    }
+
+    container.replaceChildren();
+    data.schedule.forEach(function (day) {
+      var article = document.createElement("article");
+      article.className = "schedule-day";
+
+      var heading = document.createElement("h3");
+      heading.textContent = formatDate(day.date);
+      article.appendChild(heading);
+
+      if (!Array.isArray(day.intervals) || day.intervals.length === 0) {
+        var empty = document.createElement("p");
+        empty.className = "schedule-empty";
+        empty.textContent = "No open play scheduled";
+        article.appendChild(empty);
+      } else {
+        var list = document.createElement("ul");
+        day.intervals.forEach(function (interval) {
+          var item = document.createElement("li");
+          item.textContent = formatTime(interval.start) + " – " + formatTime(interval.end);
+          list.appendChild(item);
+        });
+        article.appendChild(list);
+      }
+      container.appendChild(article);
+    });
+
+    var timestamp = new Date(data.scraped_at);
+    updated.textContent = "Updated " + new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      timeZone: data.timezone,
+      timeZoneName: "short"
+    }).format(timestamp);
+  }
+
+  fetch(endpoint, { cache: "no-store" })
+    .then(function (response) {
+      if (!response.ok) throw new Error("Schedule request failed");
+      return response.json();
+    })
+    .then(render)
+    .catch(function () {
+      container.innerHTML = '<p class="schedule-status">The current schedule is temporarily unavailable. Please check back soon.</p>';
+      updated.textContent = "Schedule unavailable";
+    });
+})();
+</script>
+
 <script>
 (function () {
   var photos = [

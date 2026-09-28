@@ -1,0 +1,50 @@
+name: Update badminton schedule
+
+on:
+  schedule:
+    - cron: "15 6 * * *"
+      timezone: "America/Chicago"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-badminton-schedule
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Run tests
+        run: python -m unittest discover -s scraping/tests -v
+
+      - name: Fetch current schedule
+        env:
+          MAZEVO_CALENDAR_CODE: ${{ secrets.MAZEVO_CALENDAR_CODE }}
+        run: python scraping/scrape_schedule.py
+
+      - name: Validate generated JSON
+        run: python -m json.tool assets/data/badminton_schedule.json > /dev/null
+
+      - name: Commit schedule snapshot
+        run: |
+          if git diff --quiet -- assets/data/badminton_schedule.json; then
+            echo "Schedule snapshot is unchanged."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/data/badminton_schedule.json
+          git commit -m "Update badminton schedule for $(date -u +%F)"
+          git push
