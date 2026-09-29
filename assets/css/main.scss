@@ -277,16 +277,35 @@ body.club-home {
 
 .schedule-grid {
   display: grid;
-  gap: .55rem;
+}
+
+.weekly-summary {
+  overflow: hidden;
+  border: 1px solid var(--mkbc-line);
+  border-radius: .55rem;
+  background: #fff;
+}
+
+.weekly-summary > h3 {
+  margin: 0;
+  padding: .7rem .8rem;
+  border-bottom: 1px solid var(--mkbc-line);
+  color: var(--mkbc-green-dark);
+  font-size: .85rem;
 }
 
 .schedule-day {
+  display: grid;
+  grid-template-columns: 5.3rem minmax(0, 1fr);
+  gap: .65rem;
+  align-items: start;
   height: auto;
   min-width: 0;
-  padding: .75rem;
-  border: 1px solid transparent;
-  border-radius: .45rem;
-  background: var(--mkbc-warm);
+  padding: .62rem .75rem;
+  border: 0;
+  border-bottom: 1px solid var(--mkbc-line);
+  border-radius: 0;
+  background: #fff;
   color: inherit;
   font: inherit;
   text-align: left;
@@ -295,8 +314,7 @@ body.club-home {
 }
 
 .schedule-day:hover {
-  border-color: #bdc9c1;
-  transform: translateY(-1px);
+  background: var(--mkbc-warm);
 }
 
 .schedule-day:focus-visible {
@@ -305,19 +323,28 @@ body.club-home {
 }
 
 .schedule-day.is-selected {
-  border-color: var(--mkbc-green);
-  box-shadow: 0 0 0 1px var(--mkbc-green);
+  box-shadow: inset .22rem 0 0 var(--mkbc-green);
+  background: #f0f6f2;
+}
+
+.schedule-day:last-child {
+  border-bottom: 0;
 }
 
 .schedule-day h3 {
-  margin: 0 0 .55rem;
+  margin: 0;
   color: var(--mkbc-green-dark);
-  font-size: .9rem;
+  font-size: .78rem;
+  line-height: 1.45;
 }
 
 .schedule-day ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .12rem .3rem;
+  list-style: none;
   margin: 0;
-  padding-left: 1rem;
+  padding: 0;
 }
 
 .schedule-day li,
@@ -329,10 +356,17 @@ body.club-home {
 }
 
 .schedule-day li + li {
-  margin-top: .35rem;
+  margin-top: 0;
+}
+
+.schedule-day li + li::before {
+  margin-right: .3rem;
+  color: #9aa59e;
+  content: "/";
 }
 
 .schedule-day li {
+  display: inline-flex;
   white-space: nowrap;
 }
 
@@ -343,6 +377,10 @@ body.club-home {
 
 .schedule-status {
   grid-column: 1 / -1;
+}
+
+.schedule-grid > .schedule-status {
+  padding: .75rem;
 }
 
 .day-timeline {
@@ -505,18 +543,6 @@ body.club-home {
   .schedule-layout {
     grid-template-columns: 1fr;
   }
-
-  .schedule-grid {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-  }
-
-  .schedule-day {
-    grid-column: span 3;
-  }
-
-  .schedule-day:nth-child(n + 5) {
-    grid-column: span 4;
-  }
 }
 
 @media (max-width: 37.5rem) {
@@ -530,15 +556,6 @@ body.club-home {
 
   .schedule-meta {
     align-items: flex-start;
-  }
-
-  .schedule-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .schedule-day,
-  .schedule-day:nth-child(n + 5) {
-    grid-column: auto;
   }
 
   .timeline-scroll {

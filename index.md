@@ -55,9 +55,12 @@ classes: wide club-home
     </div>
   </div>
   <div class="schedule-layout">
-    <div class="schedule-grid" id="badmintonSchedule" aria-live="polite">
-      <p class="schedule-status">Loading the latest schedule…</p>
-    </div>
+    <section class="weekly-summary" aria-labelledby="weeklySummaryTitle">
+      <h3 id="weeklySummaryTitle">This Week</h3>
+      <div class="schedule-grid" id="badmintonSchedule" aria-live="polite">
+        <p class="schedule-status">Loading the latest schedule…</p>
+      </div>
+    </section>
     <section class="day-timeline" id="dayTimeline" aria-labelledby="timelineDate" hidden>
       <div class="timeline-heading">
         <button class="timeline-arrow" id="timelinePrevious" type="button" aria-label="Previous day">&#8249;</button>
