@@ -85,6 +85,7 @@ classes: wide club-home
   var container = document.getElementById("badmintonSchedule");
   var updated = document.getElementById("scheduleUpdated");
   var copyButton = document.getElementById("scheduleCopyButton");
+  var weeklySummary = document.querySelector(".weekly-summary");
   var timeline = document.getElementById("dayTimeline");
   var timelineDate = document.getElementById("timelineDate");
   var timelineAxis = document.getElementById("timelineAxis");
@@ -97,6 +98,14 @@ classes: wide club-home
   var selectedDay = 0;
   var timelineStart = 5 * 60;
   var timelineEnd = 24 * 60;
+
+  function syncTimelineHeight() {
+    if (window.matchMedia("(min-width: 64.01rem)").matches) {
+      timeline.style.height = weeklySummary.offsetHeight + "px";
+    } else {
+      timeline.style.removeProperty("height");
+    }
+  }
 
   function parseLocalDate(value) {
     var parts = value.split("-").map(Number);
@@ -247,6 +256,7 @@ classes: wide club-home
     selectedDay = todayIndex >= 0 ? todayIndex : 0;
     timeline.hidden = false;
     renderTimeline();
+    syncTimelineHeight();
 
     var timestamp = new Date(data.scraped_at);
     updated.textContent = "Updated " + new Intl.DateTimeFormat("en-US", {
@@ -278,6 +288,10 @@ classes: wide club-home
 
   previousButton.addEventListener("click", function () { selectDay(selectedDay - 1); });
   nextButton.addEventListener("click", function () { selectDay(selectedDay + 1); });
+  window.addEventListener("resize", syncTimelineHeight);
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(syncTimelineHeight).observe(weeklySummary);
+  }
 
   fetch(endpoint, { cache: "no-store" })
     .then(function (response) {
