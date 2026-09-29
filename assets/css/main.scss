@@ -270,7 +270,7 @@ body.club-home {
 
 .schedule-layout {
   display: grid;
-  grid-template-columns: minmax(13rem, 2fr) minmax(0, 5fr);
+  grid-template-columns: minmax(17rem, 3fr) minmax(0, 5fr);
   gap: 1rem;
   align-items: start;
 }
@@ -296,8 +296,8 @@ body.club-home {
 
 .schedule-day {
   display: grid;
-  grid-template-columns: 5.3rem minmax(0, 1fr);
-  gap: .65rem;
+  grid-template-columns: 4.8rem minmax(0, 1fr);
+  gap: .5rem;
   align-items: start;
   height: auto;
   min-width: 0;
@@ -367,7 +367,8 @@ body.club-home {
 
 .schedule-day li {
   display: inline-flex;
-  white-space: nowrap;
+  min-width: 0;
+  white-space: normal;
 }
 
 .schedule-empty,
@@ -466,7 +467,7 @@ body.club-home {
 .timeline-scroll {
   display: grid;
   grid-template-columns: 3.6rem minmax(0, 1fr);
-  height: 42rem;
+  height: 32rem;
   overflow-y: auto;
   border-top: 1px solid var(--mkbc-line);
   border-bottom: 1px solid var(--mkbc-line);
@@ -475,7 +476,7 @@ body.club-home {
 .timeline-axis,
 .timeline-track {
   position: relative;
-  height: 57rem;
+  height: 45.6rem;
 }
 
 .timeline-axis {
@@ -560,7 +561,7 @@ body.club-home {
 
   .timeline-scroll {
     grid-template-columns: 3.2rem minmax(0, 1fr);
-    height: 34rem;
+    height: 28rem;
   }
 }
 
