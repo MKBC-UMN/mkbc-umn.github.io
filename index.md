@@ -54,8 +54,25 @@ classes: wide club-home
       </button>
     </div>
   </div>
-  <div class="schedule-grid" id="badmintonSchedule" aria-live="polite">
-    <p class="schedule-status">Loading the latest schedule…</p>
+  <div class="schedule-layout">
+    <div class="schedule-grid" id="badmintonSchedule" aria-live="polite">
+      <p class="schedule-status">Loading the latest schedule…</p>
+    </div>
+    <section class="day-timeline" id="dayTimeline" aria-labelledby="timelineDate" hidden>
+      <div class="timeline-heading">
+        <button class="timeline-arrow" id="timelinePrevious" type="button" aria-label="Previous day">&#8249;</button>
+        <h3 id="timelineDate"></h3>
+        <button class="timeline-arrow" id="timelineNext" type="button" aria-label="Next day">&#8250;</button>
+      </div>
+      <div class="timeline-key" aria-hidden="true">
+        <span><i class="timeline-key-open"></i>Open play</span>
+        <span><i class="timeline-key-reserved"></i>Reserved</span>
+      </div>
+      <div class="timeline-scroll">
+        <div class="timeline-axis" id="timelineAxis" aria-hidden="true"></div>
+        <div class="timeline-track" id="timelineTrack"></div>
+      </div>
+    </section>
   </div>
   <noscript><p class="schedule-status">JavaScript is required to display the live schedule.</p></noscript>
 </section>
@@ -65,8 +82,18 @@ classes: wide club-home
   var container = document.getElementById("badmintonSchedule");
   var updated = document.getElementById("scheduleUpdated");
   var copyButton = document.getElementById("scheduleCopyButton");
+  var timeline = document.getElementById("dayTimeline");
+  var timelineDate = document.getElementById("timelineDate");
+  var timelineAxis = document.getElementById("timelineAxis");
+  var timelineTrack = document.getElementById("timelineTrack");
+  var previousButton = document.getElementById("timelinePrevious");
+  var nextButton = document.getElementById("timelineNext");
   var endpoint = {{ '/assets/data/badminton_schedule.json' | relative_url | jsonify }};
   var shareMessage = "";
+  var scheduleData = null;
+  var selectedDay = 0;
+  var timelineStart = 5 * 60;
+  var timelineEnd = 24 * 60;
 
   function parseLocalDate(value) {
     var parts = value.split("-").map(Number);
@@ -107,15 +134,80 @@ classes: wide club-home
     return lines.join("\n");
   }
 
+  function minutes(value) {
+    var parts = value.split(":").map(Number);
+    return parts[0] * 60 + parts[1];
+  }
+
+  function timelineLabel(totalMinutes) {
+    var hour = totalMinutes / 60;
+    if (hour === 24) return "12 AM";
+    return (hour % 12 || 12) + " " + (hour >= 12 ? "PM" : "AM");
+  }
+
+  function renderTimeline() {
+    var day = scheduleData.schedule[selectedDay];
+    var reservations = Array.isArray(day.reservations) ? day.reservations : day.intervals.map(function (interval) {
+      return { start: interval.start, end: interval.end, type: "open_play" };
+    });
+
+    timelineDate.textContent = formatDate(day.date);
+    timelineAxis.replaceChildren();
+    timelineTrack.replaceChildren();
+
+    for (var tick = timelineStart; tick <= timelineEnd; tick += 60) {
+      var label = document.createElement("span");
+      label.textContent = timelineLabel(tick);
+      label.style.top = ((tick - timelineStart) / (timelineEnd - timelineStart) * 100) + "%";
+      timelineAxis.appendChild(label);
+    }
+
+    reservations.forEach(function (reservation) {
+      var start = Math.max(minutes(reservation.start), timelineStart);
+      var end = Math.min(minutes(reservation.end), timelineEnd);
+      if (end <= start) return;
+
+      var block = document.createElement("div");
+      var isOpenPlay = reservation.type === "open_play";
+      block.className = "timeline-block " + (isOpenPlay ? "is-open-play" : "is-reserved");
+      block.style.top = ((start - timelineStart) / (timelineEnd - timelineStart) * 100) + "%";
+      block.style.height = ((end - start) / (timelineEnd - timelineStart) * 100) + "%";
+      block.innerHTML = "<strong>" + (isOpenPlay ? "Open Play Badminton" : "Reserved") + "</strong><span>" +
+        formatTime(reservation.start) + " – " + formatTime(reservation.end === "24:00" ? "00:00" : reservation.end) + "</span>";
+      timelineTrack.appendChild(block);
+    });
+
+    if (reservations.length === 0) {
+      var empty = document.createElement("p");
+      empty.className = "timeline-empty";
+      empty.textContent = "No reservations shown for this day";
+      timelineTrack.appendChild(empty);
+    }
+
+    previousButton.disabled = selectedDay === 0;
+    nextButton.disabled = selectedDay === scheduleData.schedule.length - 1;
+    container.querySelectorAll(".schedule-day").forEach(function (card, index) {
+      card.classList.toggle("is-selected", index === selectedDay);
+      card.setAttribute("aria-pressed", index === selectedDay ? "true" : "false");
+    });
+  }
+
+  function selectDay(index) {
+    selectedDay = Math.max(0, Math.min(index, scheduleData.schedule.length - 1));
+    renderTimeline();
+  }
+
   function render(data) {
     if (!data || !Array.isArray(data.schedule) || data.schedule.length !== 7) {
       throw new Error("Unexpected schedule data");
     }
 
     container.replaceChildren();
-    data.schedule.forEach(function (day) {
-      var article = document.createElement("article");
+    data.schedule.forEach(function (day, index) {
+      var article = document.createElement("button");
       article.className = "schedule-day";
+      article.type = "button";
+      article.setAttribute("aria-label", "Show " + formatDate(day.date) + " timeline");
 
       var heading = document.createElement("h3");
       heading.textContent = formatDate(day.date);
@@ -135,8 +227,23 @@ classes: wide club-home
         });
         article.appendChild(list);
       }
+      article.addEventListener("click", function () {
+        selectDay(index);
+      });
       container.appendChild(article);
     });
+
+    scheduleData = data;
+    var today = new Intl.DateTimeFormat("en-CA", {
+      timeZone: data.timezone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).format(new Date());
+    var todayIndex = data.schedule.findIndex(function (day) { return day.date === today; });
+    selectedDay = todayIndex >= 0 ? todayIndex : 0;
+    timeline.hidden = false;
+    renderTimeline();
 
     var timestamp = new Date(data.scraped_at);
     updated.textContent = "Updated " + new Intl.DateTimeFormat("en-US", {
@@ -165,6 +272,9 @@ classes: wide club-home
       }, 1800);
     });
   });
+
+  previousButton.addEventListener("click", function () { selectDay(selectedDay - 1); });
+  nextButton.addEventListener("click", function () { selectDay(selectedDay + 1); });
 
   fetch(endpoint, { cache: "no-store" })
     .then(function (response) {

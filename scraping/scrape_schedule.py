@@ -155,21 +155,27 @@ def fetch_bookings(code: str, monday: date, sunday: date) -> list[dict[str, Any]
 
 def is_target_booking(booking: dict[str, Any]) -> bool:
     return (
+        is_target_room(booking)
+        and normalize_label(booking.get("eventName")) == normalize_label(TARGET_ACTIVITY)
+    )
+
+
+def is_target_room(booking: dict[str, Any]) -> bool:
+    return (
         normalize_label(booking.get("buildingDescription")) == normalize_label(TARGET_BUILDING)
         and normalize_label(booking.get("roomDescription")) == normalize_label(TARGET_ROOM)
-        and normalize_label(booking.get("eventName")) == normalize_label(TARGET_ACTIVITY)
     )
 
 
 def _parse_datetime(value: object, field: str) -> datetime:
     if not isinstance(value, str):
-        raise ScrapeError(f"A matching booking is missing {field}")
+        raise ScrapeError(f"A Cooke 325 booking is missing {field}")
     try:
         parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     except ValueError as exc:
-        raise ScrapeError(f"A matching booking has an invalid {field}") from exc
+        raise ScrapeError(f"A Cooke 325 booking has an invalid {field}") from exc
     if parsed.tzinfo is None:
-        raise ScrapeError(f"A matching booking has no timezone in {field}")
+        raise ScrapeError(f"A Cooke 325 booking has no timezone in {field}")
     return parsed.astimezone(TIME_ZONE)
 
 
@@ -202,15 +208,23 @@ def normalize_schedule(
     intervals_by_date: dict[date, list[tuple[datetime, datetime]]] = {
         monday + timedelta(days=offset): [] for offset in range(7)
     }
+    reservations_by_date: dict[date, list[tuple[datetime, datetime, str]]] = {
+        monday + timedelta(days=offset): [] for offset in range(7)
+    }
 
     for booking in bookings:
-        if not isinstance(booking, dict) or not is_target_booking(booking):
+        if not isinstance(booking, dict) or not is_target_room(booking):
             continue
         start = _parse_datetime(booking.get("dateTimeStart"), "dateTimeStart")
         end = _parse_datetime(booking.get("dateTimeEnd"), "dateTimeEnd")
+        is_open_play = is_target_booking(booking)
         for day, piece_start, piece_end in _split_by_day(start, end):
             if monday <= day <= sunday:
-                intervals_by_date[day].append((piece_start, piece_end))
+                if is_open_play:
+                    intervals_by_date[day].append((piece_start, piece_end))
+                reservations_by_date[day].append(
+                    (piece_start, piece_end, "open_play" if is_open_play else "reserved")
+                )
 
     schedule = []
     for day in sorted(intervals_by_date):
@@ -221,7 +235,30 @@ def normalize_schedule(
             }
             for start, end in _merge_intervals(intervals_by_date[day])
         ]
-        schedule.append({"date": day.isoformat(), "day": day.strftime("%a"), "intervals": intervals})
+        reservations = []
+        for reservation_type in ("reserved", "open_play"):
+            same_type = [
+                (start, end)
+                for start, end, item_type in reservations_by_date[day]
+                if item_type == reservation_type
+            ]
+            for start, end in _merge_intervals(same_type):
+                reservations.append(
+                    {
+                        "start": start.strftime("%H:%M"),
+                        "end": "24:00" if end.date() > day else end.strftime("%H:%M"),
+                        "type": reservation_type,
+                    }
+                )
+        reservations.sort(key=lambda item: (item["start"], item["end"], item["type"]))
+        schedule.append(
+            {
+                "date": day.isoformat(),
+                "day": day.strftime("%a"),
+                "intervals": intervals,
+                "reservations": reservations,
+            }
+        )
 
     return {
         "location": "Cooke Hall 325",
