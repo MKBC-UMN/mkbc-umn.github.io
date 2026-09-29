@@ -94,6 +94,37 @@ class NormalizationTests(unittest.TestCase):
             result["schedule"][0]["intervals"], [{"start": "07:00", "end": "11:00"}]
         )
         self.assertEqual(result["schedule"][1]["intervals"], [])
+        self.assertEqual(
+            result["schedule"][0]["reservations"],
+            [{"start": "07:00", "end": "11:00", "type": "open_play"}],
+        )
+
+    def test_other_room_reservations_are_generic_timeline_blocks(self):
+        bookings = [
+            booking(
+                "Varsity Practice",
+                "Cooke 325",
+                "2026-09-29T08:00:00-05:00",
+                "2026-09-29T12:05:00-05:00",
+            ),
+            booking(
+                "Private Event",
+                "Cooke 308",
+                "2026-09-29T09:00:00-05:00",
+                "2026-09-29T10:00:00-05:00",
+            ),
+        ]
+        result = scraper.normalize_schedule(
+            bookings,
+            date(2026, 9, 28),
+            date(2026, 10, 4),
+            datetime(2026, 9, 29, 6, 15, tzinfo=CENTRAL),
+        )
+        self.assertEqual(result["schedule"][1]["intervals"], [])
+        self.assertEqual(
+            result["schedule"][1]["reservations"],
+            [{"start": "08:00", "end": "12:05", "type": "reserved"}],
+        )
 
     def test_utc_input_is_converted_to_chicago_time(self):
         bookings = [
