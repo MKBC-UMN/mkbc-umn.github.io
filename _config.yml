@@ -2,7 +2,9 @@ title: "MKBC UMN"
 name: "Minnesota Korean Badminton Club"
 email: ""
 description: >-
-  Minnesota Korean Badminton Club at the University of Minnesota.
+  Minnesota Korean Badminton Club (MKBC UMN) is a student badminton community
+  at the University of Minnesota Twin Cities. View open-play schedules,
+  membership information, events, and how to join.
 url: "https://mkbc-umn.github.io"
 baseurl: ""
 repository: "MKBC-UMN/MKBC-UMN.github.io"
@@ -16,6 +18,11 @@ markdown: kramdown
 permalink: /:categories/:title/
 include:
   - _pages
+exclude:
+  - AGENTS.md
+  - README.md
+  - scraping
+  - vendor
 
 plugins:
   - jekyll-remote-theme
@@ -44,6 +51,13 @@ author:
     - label: "Gopherlink"
       icon: "fas fa-fw fa-link"
       url: "https://gopherlink.umn.edu/4938/home/"
+
+social:
+  type: Organization
+  name: "Minnesota Korean Badminton Club"
+  links:
+    - "https://www.instagram.com/mkbc_25/"
+    - "https://gopherlink.umn.edu/4938/home/"
 
 footer:
   links:
