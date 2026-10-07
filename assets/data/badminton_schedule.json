@@ -4,7 +4,7 @@
   "timezone": "America/Chicago",
   "week_start": "2026-10-05",
   "week_end": "2026-10-11",
-  "scraped_at": "2026-10-06T12:12:03-05:00",
+  "scraped_at": "2026-10-07T12:49:46-05:00",
   "schedule": [
     {
       "date": "2026-10-05",
@@ -47,10 +47,6 @@
         },
         {
           "start": "12:05",
-          "end": "14:30"
-        },
-        {
-          "start": "15:20",
           "end": "18:30"
         }
       ],
@@ -72,16 +68,6 @@
         },
         {
           "start": "12:05",
-          "end": "14:30",
-          "type": "open_play"
-        },
-        {
-          "start": "14:30",
-          "end": "15:20",
-          "type": "reserved"
-        },
-        {
-          "start": "15:20",
           "end": "18:30",
           "type": "open_play"
         },
@@ -198,6 +184,10 @@
         {
           "start": "15:05",
           "end": "17:30"
+        },
+        {
+          "start": "21:15",
+          "end": "22:00"
         }
       ],
       "reservations": [
@@ -227,9 +217,14 @@
           "type": "open_play"
         },
         {
-          "start": "18:00",
+          "start": "17:30",
           "end": "21:00",
           "type": "reserved"
+        },
+        {
+          "start": "21:15",
+          "end": "22:00",
+          "type": "open_play"
         }
       ]
     },
