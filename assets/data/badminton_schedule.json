@@ -2,43 +2,29 @@
   "location": "Cooke Hall 325",
   "activity": "Open Play Badminton",
   "timezone": "America/Chicago",
-  "week_start": "2026-10-05",
-  "week_end": "2026-10-11",
-  "scraped_at": "2026-10-11T11:39:14-05:00",
+  "week_start": "2026-10-12",
+  "week_end": "2026-10-18",
+  "scraped_at": "2026-10-12T15:18:08-05:00",
   "schedule": [
     {
-      "date": "2026-10-05",
+      "date": "2026-10-12",
       "day": "Mon",
       "intervals": [
         {
           "start": "05:45",
-          "end": "18:30"
-        },
-        {
-          "start": "21:15",
           "end": "23:00"
         }
       ],
       "reservations": [
         {
           "start": "05:45",
-          "end": "18:30",
-          "type": "open_play"
-        },
-        {
-          "start": "19:00",
-          "end": "21:00",
-          "type": "reserved"
-        },
-        {
-          "start": "21:15",
           "end": "23:00",
           "type": "open_play"
         }
       ]
     },
     {
-      "date": "2026-10-06",
+      "date": "2026-10-13",
       "day": "Tue",
       "intervals": [
         {
@@ -47,6 +33,10 @@
         },
         {
           "start": "12:05",
+          "end": "14:30"
+        },
+        {
+          "start": "15:20",
           "end": "18:30"
         }
       ],
@@ -68,6 +58,16 @@
         },
         {
           "start": "12:05",
+          "end": "14:30",
+          "type": "open_play"
+        },
+        {
+          "start": "14:30",
+          "end": "15:20",
+          "type": "reserved"
+        },
+        {
+          "start": "15:20",
           "end": "18:30",
           "type": "open_play"
         },
@@ -79,7 +79,7 @@
       ]
     },
     {
-      "date": "2026-10-07",
+      "date": "2026-10-14",
       "day": "Wed",
       "intervals": [
         {
@@ -115,7 +115,7 @@
       ]
     },
     {
-      "date": "2026-10-08",
+      "date": "2026-10-15",
       "day": "Thu",
       "intervals": [
         {
@@ -170,7 +170,7 @@
       ]
     },
     {
-      "date": "2026-10-09",
+      "date": "2026-10-16",
       "day": "Fri",
       "intervals": [
         {
@@ -183,10 +183,6 @@
         },
         {
           "start": "15:05",
-          "end": "17:30"
-        },
-        {
-          "start": "21:15",
           "end": "22:00"
         }
       ],
@@ -213,54 +209,30 @@
         },
         {
           "start": "15:05",
-          "end": "17:30",
-          "type": "open_play"
-        },
-        {
-          "start": "17:30",
-          "end": "21:00",
-          "type": "reserved"
-        },
-        {
-          "start": "21:15",
           "end": "22:00",
           "type": "open_play"
         }
       ]
     },
     {
-      "date": "2026-10-10",
+      "date": "2026-10-17",
       "day": "Sat",
       "intervals": [
         {
           "start": "08:00",
-          "end": "11:00"
-        },
-        {
-          "start": "13:00",
           "end": "21:00"
         }
       ],
       "reservations": [
         {
           "start": "08:00",
-          "end": "11:00",
-          "type": "open_play"
-        },
-        {
-          "start": "11:00",
-          "end": "13:00",
-          "type": "reserved"
-        },
-        {
-          "start": "13:00",
           "end": "21:00",
           "type": "open_play"
         }
       ]
     },
     {
-      "date": "2026-10-11",
+      "date": "2026-10-18",
       "day": "Sun",
       "intervals": [
         {
