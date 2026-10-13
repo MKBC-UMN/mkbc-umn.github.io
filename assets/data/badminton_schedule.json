@@ -4,7 +4,7 @@
   "timezone": "America/Chicago",
   "week_start": "2026-10-12",
   "week_end": "2026-10-18",
-  "scraped_at": "2026-10-12T15:18:08-05:00",
+  "scraped_at": "2026-10-13T13:19:18-05:00",
   "schedule": [
     {
       "date": "2026-10-12",
@@ -32,7 +32,7 @@
           "end": "08:00"
         },
         {
-          "start": "12:05",
+          "start": "09:55",
           "end": "14:30"
         },
         {
@@ -52,12 +52,7 @@
           "type": "reserved"
         },
         {
-          "start": "10:10",
-          "end": "12:05",
-          "type": "reserved"
-        },
-        {
-          "start": "12:05",
+          "start": "09:55",
           "end": "14:30",
           "type": "open_play"
         },
