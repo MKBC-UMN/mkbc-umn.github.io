@@ -56,7 +56,11 @@ classes: wide club-home
   </div>
   <div class="schedule-layout">
     <section class="weekly-summary" aria-labelledby="weeklySummaryTitle">
-      <h3 id="weeklySummaryTitle">This Week</h3>
+      <div class="week-pagination">
+        <button class="week-arrow" id="weekPrevious" type="button" aria-label="Show this week">&#8249;</button>
+        <h3 id="weeklySummaryTitle">This Week</h3>
+        <button class="week-arrow" id="weekNext" type="button" aria-label="Show next week">&#8250;</button>
+      </div>
       <div class="schedule-grid" id="badmintonSchedule" aria-live="polite">
         <p class="schedule-status">Loading the latest schedule…</p>
       </div>
@@ -92,10 +96,14 @@ classes: wide club-home
   var timelineTrack = document.getElementById("timelineTrack");
   var previousButton = document.getElementById("timelinePrevious");
   var nextButton = document.getElementById("timelineNext");
+  var weekPreviousButton = document.getElementById("weekPrevious");
+  var weekNextButton = document.getElementById("weekNext");
+  var weekTitle = document.getElementById("weeklySummaryTitle");
   var endpoint = {{ '/assets/data/badminton_schedule.json' | relative_url | jsonify }};
   var shareMessage = "";
   var scheduleData = null;
   var selectedDay = 0;
+  var visibleWeek = 0;
   var timelineStart = 5 * 60;
   var timelineEnd = 24 * 60;
 
@@ -198,27 +206,34 @@ classes: wide club-home
 
     previousButton.disabled = selectedDay === 0;
     nextButton.disabled = selectedDay === scheduleData.schedule.length - 1;
-    container.querySelectorAll(".schedule-day").forEach(function (card, index) {
-      card.classList.toggle("is-selected", index === selectedDay);
-      card.setAttribute("aria-pressed", index === selectedDay ? "true" : "false");
+    container.querySelectorAll(".schedule-day").forEach(function (card) {
+      var isSelected = Number(card.dataset.dayIndex) === selectedDay;
+      card.classList.toggle("is-selected", isSelected);
+      card.setAttribute("aria-pressed", isSelected ? "true" : "false");
     });
   }
 
   function selectDay(index) {
     selectedDay = Math.max(0, Math.min(index, scheduleData.schedule.length - 1));
+    var selectedWeek = Math.floor(selectedDay / 7);
+    if (selectedWeek !== visibleWeek) {
+      visibleWeek = selectedWeek;
+      renderWeek();
+    }
     renderTimeline();
   }
 
-  function render(data) {
-    if (!data || !Array.isArray(data.schedule) || data.schedule.length !== 14) {
-      throw new Error("Unexpected schedule data");
-    }
+  function renderWeek() {
+    var firstIndex = visibleWeek * 7;
+    var week = scheduleData.schedule.slice(firstIndex, firstIndex + 7);
 
     container.replaceChildren();
-    data.schedule.forEach(function (day, index) {
+    week.forEach(function (day, offset) {
+      var index = firstIndex + offset;
       var article = document.createElement("button");
       article.className = "schedule-day";
       article.type = "button";
+      article.dataset.dayIndex = index;
       article.setAttribute("aria-label", "Show " + formatDate(day.date) + " timeline");
 
       var heading = document.createElement("h3");
@@ -245,6 +260,17 @@ classes: wide club-home
       container.appendChild(article);
     });
 
+    weekTitle.textContent = (visibleWeek === 0 ? "This Week" : "Next Week") +
+      " · " + formatDate(week[0].date) + " – " + formatDate(week[6].date);
+    weekPreviousButton.disabled = visibleWeek === 0;
+    weekNextButton.disabled = visibleWeek === 1;
+  }
+
+  function render(data) {
+    if (!data || !Array.isArray(data.schedule) || data.schedule.length !== 14) {
+      throw new Error("Unexpected schedule data");
+    }
+
     scheduleData = data;
     var today = new Intl.DateTimeFormat("en-CA", {
       timeZone: data.timezone,
@@ -254,6 +280,8 @@ classes: wide club-home
     }).format(new Date());
     var todayIndex = data.schedule.findIndex(function (day) { return day.date === today; });
     selectedDay = todayIndex >= 0 ? todayIndex : 0;
+    visibleWeek = Math.floor(selectedDay / 7);
+    renderWeek();
     timeline.hidden = false;
     renderTimeline();
     syncTimelineHeight();
@@ -271,6 +299,22 @@ classes: wide club-home
     shareMessage = buildShareMessage(data);
     copyButton.disabled = false;
   }
+
+  weekPreviousButton.addEventListener("click", function () {
+    visibleWeek = 0;
+    selectedDay = Math.max(0, selectedDay - 7);
+    renderWeek();
+    renderTimeline();
+    syncTimelineHeight();
+  });
+
+  weekNextButton.addEventListener("click", function () {
+    visibleWeek = 1;
+    selectedDay = Math.min(scheduleData.schedule.length - 1, selectedDay + 7);
+    renderWeek();
+    renderTimeline();
+    syncTimelineHeight();
+  });
 
   copyButton.addEventListener("click", function () {
     navigator.clipboard.writeText(shareMessage).then(function () {

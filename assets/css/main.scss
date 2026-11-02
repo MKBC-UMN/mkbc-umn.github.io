@@ -286,12 +286,43 @@ body.club-home {
   background: #fff;
 }
 
-.weekly-summary > h3 {
-  margin: 0;
-  padding: .7rem .8rem;
+.week-pagination {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) 2.5rem;
+  align-items: center;
+  min-height: 2.65rem;
   border-bottom: 1px solid var(--mkbc-line);
+}
+
+.week-pagination h3 {
+  margin: 0;
+  padding: .55rem .35rem;
   color: var(--mkbc-green-dark);
   font-size: .85rem;
+  text-align: center;
+}
+
+.week-arrow {
+  align-self: stretch;
+  border: 0;
+  background: transparent;
+  color: var(--mkbc-green-dark);
+  font-size: 1.35rem;
+  cursor: pointer;
+}
+
+.week-arrow:hover:not(:disabled) {
+  background: var(--mkbc-warm);
+}
+
+.week-arrow:focus-visible {
+  outline: 3px solid rgba(45, 106, 79, .3);
+  outline-offset: -3px;
+}
+
+.week-arrow:disabled {
+  color: var(--mkbc-line);
+  cursor: default;
 }
 
 .schedule-day {
