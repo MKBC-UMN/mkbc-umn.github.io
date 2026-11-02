@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fetch and normalize the current week's public badminton schedule."""
+"""Fetch and normalize this week's and next week's public badminton schedule."""
 
 from __future__ import annotations
 
@@ -44,7 +44,7 @@ def normalize_label(value: object) -> str:
 def week_bounds(reference: datetime) -> tuple[date, date]:
     local_reference = reference.astimezone(TIME_ZONE)
     monday = local_reference.date() - timedelta(days=local_reference.weekday())
-    return monday, monday + timedelta(days=6)
+    return monday, monday + timedelta(days=13)
 
 
 def _request_json(
@@ -205,11 +205,12 @@ def _merge_intervals(intervals: list[tuple[datetime, datetime]]) -> list[tuple[d
 def normalize_schedule(
     bookings: list[dict[str, Any]], monday: date, sunday: date, scraped_at: datetime
 ) -> dict[str, Any]:
+    day_count = (sunday - monday).days + 1
     intervals_by_date: dict[date, list[tuple[datetime, datetime]]] = {
-        monday + timedelta(days=offset): [] for offset in range(7)
+        monday + timedelta(days=offset): [] for offset in range(day_count)
     }
     reservations_by_date: dict[date, list[tuple[datetime, datetime, str]]] = {
-        monday + timedelta(days=offset): [] for offset in range(7)
+        monday + timedelta(days=offset): [] for offset in range(day_count)
     }
 
     for booking in bookings:

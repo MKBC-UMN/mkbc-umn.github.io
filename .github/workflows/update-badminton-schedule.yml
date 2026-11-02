@@ -2,7 +2,7 @@ name: Update badminton schedule
 
 on:
   schedule:
-    - cron: "15 6 * * *"
+    - cron: "0 6 * * *"
       timezone: "America/Chicago"
   workflow_dispatch:
 

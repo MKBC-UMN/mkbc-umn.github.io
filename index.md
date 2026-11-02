@@ -210,7 +210,7 @@ classes: wide club-home
   }
 
   function render(data) {
-    if (!data || !Array.isArray(data.schedule) || data.schedule.length !== 7) {
+    if (!data || !Array.isArray(data.schedule) || data.schedule.length !== 14) {
       throw new Error("Unexpected schedule data");
     }
 

@@ -25,18 +25,34 @@ def booking(event, room, start, end, building="Cooke Hall"):
 
 
 class WeekBoundsTests(unittest.TestCase):
-    def test_sunday_stays_in_preceding_monday_week(self):
+    def test_sunday_includes_the_following_week(self):
         monday, sunday = scraper.week_bounds(datetime(2026, 10, 4, 18, tzinfo=CENTRAL))
         self.assertEqual(monday, date(2026, 9, 28))
-        self.assertEqual(sunday, date(2026, 10, 4))
+        self.assertEqual(sunday, date(2026, 10, 11))
 
     def test_year_boundary(self):
         monday, sunday = scraper.week_bounds(datetime(2027, 1, 1, 8, tzinfo=CENTRAL))
         self.assertEqual(monday, date(2026, 12, 28))
-        self.assertEqual(sunday, date(2027, 1, 3))
+        self.assertEqual(sunday, date(2027, 1, 10))
+
+    def test_monday_returns_fourteen_days(self):
+        monday, sunday = scraper.week_bounds(datetime(2026, 11, 2, 6, tzinfo=CENTRAL))
+        self.assertEqual(monday, date(2026, 11, 2))
+        self.assertEqual(sunday, date(2026, 11, 15))
 
 
 class NormalizationTests(unittest.TestCase):
+    def test_normalizes_all_fourteen_days(self):
+        result = scraper.normalize_schedule(
+            [],
+            date(2026, 11, 2),
+            date(2026, 11, 15),
+            datetime(2026, 11, 2, 6, tzinfo=CENTRAL),
+        )
+        self.assertEqual(len(result["schedule"]), 14)
+        self.assertEqual(result["schedule"][0]["date"], "2026-11-02")
+        self.assertEqual(result["schedule"][-1]["date"], "2026-11-15")
+
     def test_punctuation_and_case_normalization(self):
         item = booking(
             "OPEN PLAY- Badminton",
@@ -159,7 +175,7 @@ class NormalizationTests(unittest.TestCase):
 
 
 class PayloadTests(unittest.TestCase):
-    def test_payload_uses_zero_based_months_and_full_week(self):
+    def test_payload_uses_zero_based_months_and_full_date_range(self):
         payload = scraper.build_events_payload(
             {
                 "apiKey": "public-key",
@@ -167,12 +183,12 @@ class PayloadTests(unittest.TestCase):
                 "statusIds": [141, 142],
             },
             date(2026, 9, 28),
-            date(2026, 10, 4),
+            date(2026, 10, 11),
         )
         self.assertEqual(payload["startMonth"], 8)
         self.assertEqual(payload["endMonth"], 9)
         self.assertEqual(payload["startDay"], 28)
-        self.assertEqual(payload["endDay"], 4)
+        self.assertEqual(payload["endDay"], 11)
         self.assertEqual(payload["buildingIds"], [148])
 
 
