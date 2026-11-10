@@ -4,7 +4,7 @@
   "timezone": "America/Chicago",
   "week_start": "2026-11-09",
   "week_end": "2026-11-22",
-  "scraped_at": "2026-11-09T16:11:52-06:00",
+  "scraped_at": "2026-11-10T13:33:36-06:00",
   "schedule": [
     {
       "date": "2026-11-09",
@@ -490,7 +490,7 @@
         },
         {
           "start": "13:00",
-          "end": "21:00"
+          "end": "14:45"
         }
       ],
       "reservations": [
@@ -506,8 +506,13 @@
         },
         {
           "start": "13:00",
-          "end": "21:00",
+          "end": "14:45",
           "type": "open_play"
+        },
+        {
+          "start": "15:00",
+          "end": "19:00",
+          "type": "reserved"
         }
       ]
     },
